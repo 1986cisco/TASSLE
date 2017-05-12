@@ -37,7 +37,7 @@ public class Test3x3 : MonoBehaviour
 
 
     //The Timer
-    float timeLeft = 5.0f;
+    float timeLeft = 60.0f;
     public Text text;
 
  
@@ -56,7 +56,7 @@ public class Test3x3 : MonoBehaviour
     void Update()
     {
         timeLeft -= Time.deltaTime;
-        text.text = "Time:" + Mathf.Round(timeLeft);
+        text.text = "" + Mathf.Round(timeLeft);
         if (timeLeft < 0)
         {
             resetMe();
@@ -90,7 +90,7 @@ public class Test3x3 : MonoBehaviour
 
     void resetMe()
     {
-        timeLeft = 3.0f;
+        timeLeft = 60.0f;
         newLvl();
     }
 
