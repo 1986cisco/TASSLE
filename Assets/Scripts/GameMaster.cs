@@ -1,8 +1,19 @@
 ﻿using System.Collections;
 using System.Collections.Generic;
 using UnityEngine;
+using System;
+using System.Net;
+using System.Net.Sockets;
+using System.Text;
+using System.Threading;
 
 public class GameMaster : MonoBehaviour {
+
+    static UdpClient udp;
+    Thread thread;
+    static readonly object lockObject = new object();
+    string returnData = "";
+    bool precessData = false;
 
     public GameObject[] cubes;
 
@@ -10,16 +21,31 @@ public class GameMaster : MonoBehaviour {
     // Use this for initialization
     void Start () {
         ColorMaster colorMaster = gameObject.GetComponent<ColorMaster>();
-        foreach (GameObject cube in cubes)
+        /*foreach (GameObject cube in cubes)
         {
             colorMaster.setColors(cube, false, 10, true);
         }
+        */
+        thread = new Thread(new ThreadStart(ThreadMethod));
+        thread.Start();
     }
 	
 	// Update is called once per frame
 	void Update () {
         ColorMaster colorMaster = gameObject.GetComponent<ColorMaster>();
         
+        if (precessData)
+        {
+            lock (lockObject)
+            {
+                precessData = false;
+
+                Debug.Log("Received: " + returnData);
+
+                returnData = "";
+            }
+        }
+        /*
         if (Input.GetKeyDown(KeyCode.Alpha1))
         {
             colorMaster.setColors(cubes[0], true);
@@ -84,6 +110,28 @@ public class GameMaster : MonoBehaviour {
         {
             colorMaster.setColors(cubes[15], true);
         }
+        */
         
+    }
+
+    private void ThreadMethod()
+    {
+        udp = new UdpClient(40);
+        while (true)
+        {
+            IPEndPoint RemoteIpEndPoint = new IPEndPoint(IPAddress.Any, 0);
+
+            byte[] receiveBytes = udp.Receive(ref RemoteIpEndPoint);
+
+            lock (lockObject)
+            {
+                returnData = Encoding.ASCII.GetString(receiveBytes);
+
+                if(returnData == "1\n")
+                {
+                    precessData = true;
+                }
+            }
+        }
     }
 }
