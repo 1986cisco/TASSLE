@@ -20,6 +20,14 @@ public class Test3x3 : MonoBehaviour
     public GameObject[] cubes;
     public GameObject[] vorgaben; //Array für die Vorgabenwürfel
 
+    //The Timer , Points and Stagecount
+    float timeLeft = 6.0f;
+    public Text timer;
+    public Text points;
+    public Text stage;
+    public int pointsCount;
+    public int stageCounter;
+
     void Start()
     {
         //cubemove = cube.GetComponent<CubeMove>();
@@ -34,14 +42,7 @@ public class Test3x3 : MonoBehaviour
         thread = new Thread(new ThreadStart(ThreadMethod));
         thread.Start();
     }
-
-
-    //The Timer
-    float timeLeft = 60.0f;
-    public Text text;
-
- 
-
+    
     public void newLvl()
     {
         ColorMaster3x3 colorMaster = gameObject.GetComponent<ColorMaster3x3>();
@@ -50,16 +51,20 @@ public class Test3x3 : MonoBehaviour
             int randomNumber = UnityEngine.Random.Range(1, 7);            //Weisst den kleinen Feldern der 
             colorMaster.setColors(vorgaben, false, randomNumber, true);   //Vorgabe zufällige Farbwerte zu
 
+            // HIER FEHLT NOCH: Punkteberechnung (lvlbestanden ja/nein)
         }
     }
     
     void Update()
     {
         timeLeft -= Time.deltaTime;
-        text.text = "" + Mathf.Round(timeLeft);
+        timer.text = "" + Mathf.Round(timeLeft);
+        points.text = "Points " + pointsCount;
+        stage.text = "Stage " + stageCounter;
         if (timeLeft < 0)
         {
             resetMe();
+            pointsCount += 200;
         }
 
         ColorMaster3x3 colorMaster = gameObject.GetComponent<ColorMaster3x3>();
@@ -90,7 +95,8 @@ public class Test3x3 : MonoBehaviour
 
     void resetMe()
     {
-        timeLeft = 60.0f;
+        timeLeft = 5.0f;
+        stageCounter++;
         newLvl();
     }
 
@@ -121,14 +127,9 @@ public class Test3x3 : MonoBehaviour
 
     void OnApplicationQuit()
     {
-
-
-
         if (udp != null)
         {
             udp.Close();
         }
     }
-
-
 }
