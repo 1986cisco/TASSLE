@@ -7,12 +7,18 @@ public class ColorMaster3x3 : MonoBehaviour
 
     public Material[] colors;
 
+    public int getColor(GameObject obj)
+    {
+        CubeColorChanger3x3 cubeColor = obj.GetComponent<CubeColorChanger3x3>();
+        return cubeColor.counter;
+    }
+
     public void setColors(GameObject obj, bool loop, int color = 10, bool start = false)
     {
         Renderer rend = obj.GetComponent<Renderer>();
         CubeColorChanger3x3 cubeColor = obj.GetComponent<CubeColorChanger3x3>();
 
-        Debug.Log(color);
+        //Debug.Log(color);
 
         if (color != 10)
         {

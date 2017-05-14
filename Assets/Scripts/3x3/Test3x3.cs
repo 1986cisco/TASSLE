@@ -21,7 +21,8 @@ public class Test3x3 : MonoBehaviour
     public GameObject[] vorgaben; //Array für die Vorgabenwürfel
 
     //The Timer , Points and Stagecount
-    float timeLeft = 6.0f;
+    float timeLeft = 60.0f;
+    public float time = 60.0f;
     public Text timer;
     public Text points;
     public Text stage;
@@ -30,6 +31,8 @@ public class Test3x3 : MonoBehaviour
 
     void Start()
     {
+        timeLeft = time;
+
         //cubemove = cube.GetComponent<CubeMove>();
         ColorMaster3x3 colorMaster = gameObject.GetComponent<ColorMaster3x3>();
         foreach (GameObject cube in cubes)
@@ -46,11 +49,27 @@ public class Test3x3 : MonoBehaviour
     public void newLvl()
     {
         ColorMaster3x3 colorMaster = gameObject.GetComponent<ColorMaster3x3>();
-        foreach (GameObject vorgaben in vorgaben)
+        int temp = 0;
+        int correctCubes = 0;
+        //Punkteabgleich:
+        //10 Punkte pro richtigem Feld
+        //100 Punkte extra wenn alles richtig ist
+        foreach (GameObject vorgabe in vorgaben)
         {
+            
+            if (colorMaster.getColor(vorgabe) == colorMaster.getColor(cubes[temp]))
+            {
+                correctCubes++;
+                pointsCount += 10;
+            }
+            if (correctCubes >= 9)
+            {
+                pointsCount += 100;
+            }
             int randomNumber = UnityEngine.Random.Range(1, 7);            //Weisst den kleinen Feldern der 
-            colorMaster.setColors(vorgaben, false, randomNumber, true);   //Vorgabe zufällige Farbwerte zu
+            colorMaster.setColors(vorgabe, false, randomNumber, true);   //Vorgabe zufällige Farbwerte zu
 
+            temp++;
             // HIER FEHLT NOCH: Punkteberechnung (lvlbestanden ja/nein)
         }
     }
@@ -64,7 +83,7 @@ public class Test3x3 : MonoBehaviour
         if (timeLeft < 0)
         {
             resetMe();
-            pointsCount += 200;
+            //pointsCount += 200;
         }
 
         ColorMaster3x3 colorMaster = gameObject.GetComponent<ColorMaster3x3>();
@@ -76,9 +95,6 @@ public class Test3x3 : MonoBehaviour
             lock (lockObject)
             {
                 precessData = false;
-                // cube.SendMessage("Move");
-                // or
-                //cubemove.Move();
 
                 //Process received data
                 Debug.Log("Received: " + returnData);
@@ -95,7 +111,7 @@ public class Test3x3 : MonoBehaviour
 
     void resetMe()
     {
-        timeLeft = 5.0f;
+        timeLeft = time;
         stageCounter++;
         newLvl();
     }
