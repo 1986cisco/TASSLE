@@ -381,7 +381,7 @@ MonoBehaviour:
   - {fileID: 1477403162}
   - {fileID: 1996558244}
   - {fileID: 1899864417}
-  time: 20
+  time: 40
   timer: {fileID: 644792056}
   points: {fileID: 114025108}
   stage: {fileID: 1249032977}
